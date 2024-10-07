@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { client } from "@/app/lib/sanity";
+import { sanityClient } from "@/app/lib/sanity";
 
 export async function POST(req: Request) {
   console.log('API route hit with POST request');
@@ -9,7 +9,7 @@ export async function POST(req: Request) {
     console.log('Received order data:', orderData);
     
     // Create the order in Sanity
-    const order = await client.create({
+    const order = await sanityClient.create({
       _type: 'order',
       ...orderData
     });
