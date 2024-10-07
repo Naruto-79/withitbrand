@@ -3,15 +3,7 @@
 import Image from "next/image";
 import { urlFor } from "../lib/sanity";
 import { useState } from "react";
-
-// Define a type for the image object
-interface SanityImage {
-  _type: string;
-  asset: {
-    _ref: string;
-    _type: string;
-  };
-}
+import { SanityImage } from "../types/sanity";
 
 interface ImageGalleryProps {
   images: SanityImage[];

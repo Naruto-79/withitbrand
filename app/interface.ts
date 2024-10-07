@@ -1,5 +1,4 @@
-
-export interface simplifiedProduct {
+export interface simplifiedProduct {    
     _id: string;
     imageUrl: string;
     price: number;
@@ -10,11 +9,20 @@ export interface simplifiedProduct {
 
 export interface fullProduct {
     _id: string;
-    images: unknown;
+    images: SanityImage[];
     price: number;
     slug: string;
     categoryName: string;
     name: string;
     description: string;
     price_id: string;
+}
+
+export interface SanityImage {
+    _id: string;
+    _type: string;
+    asset: {
+        _ref: string;
+        _type: string;
+    };
 }

@@ -3,22 +3,14 @@
 import { Button } from "@/components/ui/button";
 import { useShoppingCart } from "use-shopping-cart";
 import { urlFor } from "../lib/sanity";
-
-// Define a type for the Sanity image
-interface SanityImage {
-  _type: string;
-  asset: {
-    _ref: string;
-    _type: string;
-  };
-}
+import { SanityImage } from "../interface";
 
 export interface ProductCart {
   name: string;
   description: string;
   price: number;
   currency: string;
-  image: SanityImage;
+image: SanityImage;
   price_id: string;
 }
 
