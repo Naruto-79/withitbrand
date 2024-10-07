@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { simplifiedProduct } from "../interface";
-import { client } from "../lib/sanity";
+import { sanityClient } from "../lib/sanity";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 
@@ -14,7 +14,7 @@ async function getData() {
           "imageUrl": images[0].asset->url
       }`;
 
-  const data = await client.fetch(query);
+  const data = await sanityClient.fetch(query);
 
   return data;
 }

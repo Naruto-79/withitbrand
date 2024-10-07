@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { simplifiedProduct } from "../interface";
-import { client } from "../lib/sanity";
+import { sanityClient } from "../lib/sanity";
 import Image from "next/image";
 
 async function getData(cateogry: string) {
@@ -13,7 +13,7 @@ async function getData(cateogry: string) {
           "categoryName": category->name
       }`;
 
-  const data = await client.fetch(query);
+  const data = await sanityClient.fetch(query);
 
   return data;
 }

@@ -1,11 +1,10 @@
 import Image from "next/image";
-import { client, urlFor } from "../lib/sanity";
+import { sanityClient, urlFor } from "../lib/sanity";
 import Link from "next/link";
 
 async function getData() {
   const query = "*[_type == 'heroimage'][0]";
-
-  const data = await client.fetch(query);
+  const data = await sanityClient.fetch(query);
 
   return data;
 }

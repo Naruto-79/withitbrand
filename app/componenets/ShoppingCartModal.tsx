@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, MouseEventHandler } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -24,8 +24,8 @@ export default function ShoppingCartModal() {
 
   const [isCheckoutVisible, setCheckoutVisible] = useState(false);
 
-  async function handleCheckoutSubmit(orderData: any) {
-    console.log(orderData);
+  const handleCheckoutSubmit: MouseEventHandler<HTMLButtonElement> = async (event) => {
+    console.log(event);
 
     try {
       const response = await fetch('/api/create-order', {
@@ -33,7 +33,7 @@ export default function ShoppingCartModal() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(orderData),
+        body: JSON.stringify(event),
       });
 
       if (!response.ok) {
@@ -131,7 +131,10 @@ export default function ShoppingCartModal() {
 
               {isCheckoutVisible && (
                 <CheckoutForm
-                  onSubmit={handleCheckoutSubmit}
+                  onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
+                    event.preventDefault();
+                    handleCheckoutSubmit(event as unknown as React.MouseEvent<HTMLButtonElement, MouseEvent>);
+                  }}
                   cartItems={Object.values(cartDetails ?? {})}
                   totalPrice={totalPrice ?? 0}
                 />
