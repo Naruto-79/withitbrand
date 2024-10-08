@@ -16,13 +16,22 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
     setBigImage(image);
   };
 
+  const getImageUrl = (image: SanityImage) => {
+    try {
+      return urlFor(image).url();
+    } catch (error) {
+      console.error("Error generating image URL:", error);
+      return '/path/to/default/image.jpg'; // Fallback image
+    }
+  };
+
   return (
     <div className="grid gap-4 lg:grid-cols-5">
       <div className="order-last flex gap-4 lg:order-none lg:flex-col">
         {images.map((image, idx) => (
           <div key={idx} className="overflow-hidden rounded-lg bg-gray-100">
             <Image
-              src={urlFor(image).url()}
+              src={getImageUrl(image)}
               width={200}
               height={200}
               alt={`Product image ${idx + 1}`}
@@ -35,7 +44,7 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
 
       <div className="relative overflow-hidden rounded-lg bg-gray-100 lg:col-span-4">
         <Image
-          src={urlFor(bigImage).url()}
+          src={getImageUrl(bigImage)}
           alt="Main product image"
           width={500}
           height={500}
