@@ -2,7 +2,7 @@ import AddToBag from "@/app/componenets/AddToBag";
 import CheckoutNow from "@/app/componenets/CheckoutNow";
 import ImageGallery from "@/app/componenets/ImageGallery";
 import { FullProduct,} from "@/app/types/sanity";
-import { sanityClient } from "@/app/lib/sanity";
+import { sanityClient } from "@/app/lib/sanity"; // Ensure this is the correct import
 import { Button } from "@/components/ui/button";
 import { Star, Truck } from "lucide-react";
 
