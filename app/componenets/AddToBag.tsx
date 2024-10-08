@@ -10,7 +10,7 @@ export interface ProductCart {
   description: string;
   price: number;
   currency: string;
-image: SanityImage;
+  image: SanityImage | null; // Allow null here
   price_id: string;
 }
 
@@ -29,7 +29,7 @@ export default function AddToBag({
     description: description,
     price: price,
     currency: currency,
-    image: urlFor(image).url(),
+    image: image ? urlFor(image) : '/path/to/default/image.jpg',
     price_id: price_id,
   };
 

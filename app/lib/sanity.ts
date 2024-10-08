@@ -12,10 +12,10 @@ export const sanityClient = createClient({
 
 const builder = imageUrlBuilder(sanityClient);
 
-export function urlFor(source: SanityImageSource) {
-  if (!source || (typeof source === 'object' && !('asset' in source))) {
+export function urlFor(source: any) {
+  if (!source || !source.asset) {
     console.error("Invalid image source:", source);
-    return builder.image({ _ref: 'default-image-ref' }); // Use a default image reference
+    return '/path/to/default/image.jpg'; // Use a default image URL
   }
-  return builder.image(source);
+  return builder.image(source.asset).url();
 }

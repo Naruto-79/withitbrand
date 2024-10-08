@@ -16,17 +16,16 @@ export default function CheckoutNow({
   const router = useRouter();
 
   function openCheckoutForm() {
-    // Store the product details in localStorage or a global state management solution
+    const imageUrl = image ? urlFor(image) : '/path/to/default/image.jpg';
     localStorage.setItem('checkoutProduct', JSON.stringify({
       name,
       description,
       price,
       currency,
-      image: urlFor(image).url(),
+      image: imageUrl,
       price_id,
     }));
     
-    // Navigate to the checkout form page
     router.push('/checkout');
   }
 

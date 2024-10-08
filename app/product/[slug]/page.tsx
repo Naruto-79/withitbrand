@@ -1,7 +1,7 @@
 import AddToBag from "@/app/componenets/AddToBag";
 import CheckoutNow from "@/app/componenets/CheckoutNow";
 import ImageGallery from "@/app/componenets/ImageGallery";
-import { FullProduct,} from "@/app/types/sanity";
+import { FullProduct, SanityImage,} from "@/app/types/sanity";
 import { sanityClient } from "@/app/lib/sanity"; // Ensure this is the correct import
 import { Button } from "@/components/ui/button";
 import { Star, Truck } from "lucide-react";
@@ -10,11 +10,11 @@ async function getData(slug: string) {
   const query = `*[_type == "product" && slug.current == "${slug}"][0] {
     _id,
     images[]{
-      _id, // Add this line to include the image ID
+      _id,
       _type,
       asset->{
-        _ref,
-        _type
+        _id,
+        url
       }
     },
     price,
@@ -26,7 +26,6 @@ async function getData(slug: string) {
   }`;
 
   const data = await sanityClient.fetch(query);
-
   return data;
 }
 
@@ -38,6 +37,9 @@ export default async function ProductPage({
   params: { slug: string };
 }) {
   const data: FullProduct = await getData(params.slug);
+
+  // Get the first image or use null
+  const firstImage: SanityImage | null = data.images && data.images.length > 0 ? data.images[0] : null;
 
   return (
     <div className="bg-white">
@@ -89,7 +91,7 @@ export default async function ProductPage({
               <AddToBag
                 currency="BDT"
                 description={data.description}
-                image={data.images[0]}
+                image={firstImage}
                 name={data.name}
                 price={data.price}
                 price_id={data.price_id}
@@ -97,7 +99,7 @@ export default async function ProductPage({
               <CheckoutNow
                 currency="BDT"
                 description={data.description}
-                image={data.images[0]}
+                image={firstImage}
                 name={data.name}
                 price={data.price}
                 price_id={data.price_id}

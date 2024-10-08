@@ -16,12 +16,20 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
     setBigImage(image);
   };
 
-  const getImageUrl = (image: SanityImage) => {
+  const getImageUrl = (image: SanityImage): string => {
     try {
-      return urlFor(image).url();
+      const imageUrl = urlFor(image);
+      if (typeof imageUrl === 'string') {
+        return imageUrl;
+      } else if (typeof imageUrl === 'object' && imageUrl !== null && 'url' in imageUrl && typeof (imageUrl as { url: unknown }).url === 'function') {
+        return (imageUrl as { url: () => string }).url();
+      } else {
+        console.error("Invalid image URL format:", imageUrl);
+        return '/path/to/default/image.jpg';
+      }
     } catch (error) {
       console.error("Error generating image URL:", error);
-      return '/path/to/default/image.jpg'; // Fallback image
+      return '/path/to/default/image.jpg';
     }
   };
 
