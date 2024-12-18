@@ -31,12 +31,10 @@ async function getData(slug: string) {
 
 export const dynamic = "force-dynamic";
 
-export default async function ProductPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  const data: FullProduct = await getData(params.slug);
+export default async function slug({ params }: { params: { slug: string } }) {
+  // Await params before using its properties
+  const { slug } = await params; // Await params here
+  const data: FullProduct = await getData(slug); // Use the awaited slug
 
   // Get the first image or use null
   const firstImage: SanityImage | null = data.images && data.images.length > 0 ? data.images[0] : null;
