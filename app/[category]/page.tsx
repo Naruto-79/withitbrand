@@ -45,20 +45,26 @@ export async function generateMetadata({
   };
 }
 
+// Define PageProps to match Next.js expectations
+export interface PageProps {
+  params: Promise<{ category: string }>;
+  searchParams?: Promise<any>;
+}
+
 // Main Page Component
 export default async function Page({ 
   params 
-}: { 
-  params: { category: string } 
-}) {
-  const data: SimplifiedProduct[] = await getData(params.category);
+}: PageProps) {
+  // Resolve the params Promise
+  const resolvedParams = await Promise.resolve(params);
+  const data: SimplifiedProduct[] = await getData(resolvedParams.category);
 
   return (
     <div className="bg-white">
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
         <div className="flex justify-between items-center">
           <h2 className="text-2xl font-bold tracking-tight text-gray-900">
-            Our Products for {params.category}
+            Our Products for {resolvedParams.category}
           </h2>
         </div>
 
