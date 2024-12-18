@@ -6,6 +6,8 @@ import { sanityClient } from "@/app/lib/sanity"; // Ensure this is the correct i
 import { Button } from "@/components/ui/button";
 import { Star, Truck } from "lucide-react";
 
+declare module 'lucide-react';
+
 async function getData(slug: string) {
   const query = `*[_type == "product" && slug.current == "${slug}"][0] {
     _id,

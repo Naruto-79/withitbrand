@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Metadata } from "next";
 import { sanityClient } from "../lib/sanity";
+import { NextPage } from 'next';
 
 // Define the product type
 interface SimplifiedProduct {
@@ -51,20 +52,16 @@ export interface PageProps {
   searchParams?: Promise<any>;
 }
 
-// Main Page Component
-export default async function Page({ 
-  params 
-}: PageProps) {
-  // Resolve the params Promise
-  const resolvedParams = await Promise.resolve(params);
-  const data: SimplifiedProduct[] = await getData(resolvedParams.category);
+// Main CategoryPage Component
+const CategoryPage: NextPage<{ params: { category: string } }> = async ({ params }) => {
+  const data: SimplifiedProduct[] = await getData(params.category);
 
   return (
     <div className="bg-white">
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
         <div className="flex justify-between items-center">
           <h2 className="text-2xl font-bold tracking-tight text-gray-900">
-            Our Products for {resolvedParams.category}
+            Our Products for {params.category}
           </h2>
         </div>
 
@@ -98,4 +95,6 @@ export default async function Page({
       </div>
     </div>
   );
-}
+};
+
+export default CategoryPage;
