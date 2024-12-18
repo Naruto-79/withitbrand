@@ -23,7 +23,7 @@ interface CategoryPageProps {
   params: {
     category: string;
   };
-  data: simplifiedProduct[]; // Add data to props
+  data: simplifiedProduct[]; // Ensure this is defined correctly
 }
 
 export async function generateMetadata({ params }: { params: { category: string } }) {
@@ -82,4 +82,4 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
   );
 };
 
-export default CategoryPage; // Ensure to export the component
+export default CategoryPage; // Ensure this is the correct export
