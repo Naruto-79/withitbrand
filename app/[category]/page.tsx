@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Metadata } from "next";
-import sanityCli from "@/sanity/sanity.cli";
 import { sanityClient } from "../lib/sanity";
 
 // Define the product type
@@ -47,7 +46,7 @@ export async function generateMetadata({
 }
 
 // Main Page Component
-export default async function CategoryPage({ 
+export default async function Page({ 
   params 
 }: { 
   params: { category: string } 
