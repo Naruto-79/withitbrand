@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { useShoppingCart } from "use-shopping-cart";
-import { urlFor } from "../lib/sanity";
 import { SanityImage } from "../interface";
 
 export interface ProductCart {
@@ -10,7 +9,7 @@ export interface ProductCart {
   description: string;
   price: number;
   currency: string;
-  image: SanityImage | null; // Allow null here
+  image: SanityImage | null;
   price_id: string;
 }
 
@@ -29,7 +28,7 @@ export default function AddToBag({
     description: description,
     price: price,
     currency: currency,
-    image: image ? urlFor(image) : '/path/to/default/image.jpg',
+    image: image?.asset?.url || '/path/to/default/image.jpg',
     price_id: price_id,
   };
 

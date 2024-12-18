@@ -2,22 +2,38 @@ import { NextResponse } from 'next/server';
 import { sanityClient } from "@/app/lib/sanity";
 
 export async function POST(req: Request) {
-  console.log('API route hit with POST request');
-  
   try {
     const orderData = await req.json();
-    console.log('Received order data:', orderData);
     
-    // Create the order in Sanity
-    const order = await sanityClient.create({
+    // Basic validation
+    if (!orderData.billing_first_name || !orderData.cartItems) {
+      return NextResponse.json({ 
+        success: false, 
+        message: "Missing required fields" 
+      }, { status: 400 });
+    }
+
+    // Ensure we have the correct _type for Sanity
+    const sanitizedOrder = {
       _type: 'order',
       ...orderData
+    };
+
+    // Create the order in Sanity
+    const result = await sanityClient.create(sanitizedOrder);
+
+    return NextResponse.json({ 
+      success: true, 
+      orderId: result._id,
+      message: "Order created successfully" 
     });
 
-    console.log('Order created:', order);
-    return NextResponse.json({ success: true, orderId: order._id });
-  } catch (error) {
-    console.error('Error creating order:', error);
-    return NextResponse.json({ success: false, message: 'Error creating order' }, { status: 500 });
+  } catch (error: Error | unknown) {
+    console.error('Order creation error:', error);
+    const errorMessage = error instanceof Error ? error.message : "Failed to create order";
+    return NextResponse.json({ 
+      success: false, 
+      message: errorMessage 
+    }, { status: 500 });
   }
 }

@@ -23,6 +23,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useShoppingCart } from "use-shopping-cart";
 
 interface CartItem {
   name: string;
@@ -48,7 +49,7 @@ interface FormData {
 }
 
 const bangladeshDistricts = [
-"Bagerhat",
+  "Bagerhat",
   "Bandarban",
   "Barguna",
   "Barishal",
@@ -111,7 +112,7 @@ const bangladeshDistricts = [
   "Sunamganj",
   "Sylhet",
   "Tangail",
-  "Thakurgaon"
+  "Thakurgaon",
 ];
 
 export default function CheckoutForm({
@@ -122,6 +123,7 @@ export default function CheckoutForm({
   const [formData, setFormData] = useState<FormData>({} as FormData);
   const { toast } = useToast();
   const router = useRouter();
+  const { clearCart } = useShoppingCart();
 
   // Handle input change
   const handleInputChange = (
@@ -137,59 +139,75 @@ export default function CheckoutForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Log the form data for debugging
+    console.log("Submitting form data:", formData);
+
     const orderData = {
-      ...formData,
-      cartItems: cartItems.map(item => ({
+      _type: "order",
+      billing_first_name: formData.billing_first_name,
+      billing_address_1: formData.billing_address_1,
+      billing_state: formData.billing_state,
+      billing_phone: formData.billing_phone,
+      billing_email: formData.billing_email,
+      billing_notes: formData.billing_notes || "",
+      billing_4digit_num: formData.billing_4digit_num,
+      billing_pmethod: formData.billing_pmethod,
+      paymentMethod,
+      cartItems: cartItems.map((item) => ({
         name: item.name,
         quantity: item.quantity,
-        price: item.price
+        price: item.price,
       })),
       totalPrice,
-      paymentMethod,
       orderDate: new Date().toISOString(),
+      status: "pending",
     };
 
-    console.log('Submitting order data:', orderData);
-
     try {
-      const response = await fetch('/api/create-order', {
-        method: 'POST',
+      const response = await fetch("/api/create-order", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(orderData),
       });
-  
-      console.log('Response status:', response.status);
-  
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Server response:', errorText);
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-  
+
       const result = await response.json();
-      console.log('Server response:', result);
-  
+      console.log("Server response:", result); // Debug log
+
+      if (!response.ok) {
+        throw new Error(
+          result.message || `HTTP error! status: ${response.status}`
+        );
+      }
+
       if (result.success) {
+        // Show success toast
         toast({
           title: "Success",
-          description: "Your order has been placed successfully!",
+          description: "Order placed successfully!",
         });
-        router.push("/order-confirmation");
-      } else {
-        throw new Error(result.message || 'Failed to submit order');
+
+        // Clear cart (if you're using use-shopping-cart)
+        if (clearCart) {
+          await clearCart();
+        }
+
+        // Use replace instead of push to avoid the back button issue
+        router.replace("/order-confirmation");
       }
-  
-    } catch (error) {
-      console.error("Error submitting order:", error);
+    } catch (error: unknown) {
+      console.error("Error details:", error);
       toast({
         title: "Error",
-        description: "There was a problem placing your order. Please try again.",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Failed to place order. Please try again.",
         variant: "destructive",
       });
     }
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-10xl mx-auto py-6">
@@ -297,7 +315,8 @@ export default function CheckoutForm({
             </div>
             <div className="space-y-2">
               <p className="text-sm">
-                Provide the last 4 digits of your payment number and place the order.
+                bkash personal <b>01764469934.</b> <br /> Provide the last 4 digits of your
+                payment number and place the order.
               </p>
             </div>
             <div className="space-y-2">
@@ -341,7 +360,8 @@ export default function CheckoutForm({
             </RadioGroup>
             {paymentMethod === "cod" && (
               <p className="mt-2 text-sm">
-                Confirm your order by providing the delivery charge via Bkash/Nagad.
+                Confirm your order by providing the delivery charge via
+                Bkash/Nagad.
               </p>
             )}
           </CardContent>

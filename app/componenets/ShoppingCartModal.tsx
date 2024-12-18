@@ -24,20 +24,22 @@ export default function ShoppingCartModal() {
 
   const [isCheckoutVisible, setCheckoutVisible] = useState(false);
 
-  const handleCheckoutSubmit: MouseEventHandler<HTMLButtonElement> = async (event) => {
+  const handleCheckoutSubmit: MouseEventHandler<HTMLButtonElement> = async (
+    event
+  ) => {
     console.log(event);
 
     try {
-      const response = await fetch('/api/create-order', {
-        method: 'POST',
+      const response = await fetch("/api/create-order", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(event),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to save order');
+        throw new Error("Failed to save order");
       }
 
       console.log("Order saved successfully");
@@ -46,7 +48,7 @@ export default function ShoppingCartModal() {
     } catch (error) {
       console.error("Error saving order", error);
     }
-  }
+  };
 
   const renderCartItems = () => {
     return Object.values(cartDetails ?? {}).map((entry) => (
@@ -101,6 +103,9 @@ export default function ShoppingCartModal() {
           <div className="mt-8 flex-1 overflow-y-auto">
             {cartCount === 0 ? (
               <h1 className="py-6 text-center">
+                Thank you for your order! Your order has been confirmed. We will
+                follow up with a confirmation call shortly.
+                <br />
                 You don&apos;t have any items
               </h1>
             ) : (
@@ -133,7 +138,12 @@ export default function ShoppingCartModal() {
                 <CheckoutForm
                   onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
                     event.preventDefault();
-                    handleCheckoutSubmit(event as unknown as React.MouseEvent<HTMLButtonElement, MouseEvent>);
+                    handleCheckoutSubmit(
+                      event as unknown as React.MouseEvent<
+                        HTMLButtonElement,
+                        MouseEvent
+                      >
+                    );
                   }}
                   cartItems={Object.values(cartDetails ?? {})}
                   totalPrice={totalPrice ?? 0}

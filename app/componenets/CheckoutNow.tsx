@@ -16,7 +16,7 @@ export default function CheckoutNow({
   const router = useRouter();
 
   function openCheckoutForm() {
-    const imageUrl = image ? urlFor(image) : '/path/to/default/image.jpg';
+    const imageUrl = image?.asset ? urlFor({ asset: { _ref: image.asset._id } }) : '/path/to/default/image.jpg';
     localStorage.setItem('checkoutProduct', JSON.stringify({
       name,
       description,

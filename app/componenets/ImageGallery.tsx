@@ -19,14 +19,7 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
   const getImageUrl = (image: SanityImage): string => {
     try {
       const imageUrl = urlFor(image);
-      if (typeof imageUrl === 'string') {
-        return imageUrl;
-      } else if (typeof imageUrl === 'object' && imageUrl !== null && 'url' in imageUrl && typeof (imageUrl as { url: unknown }).url === 'function') {
-        return (imageUrl as { url: () => string }).url();
-      } else {
-        console.error("Invalid image URL format:", imageUrl);
-        return '/path/to/default/image.jpg';
-      }
+      return imageUrl;
     } catch (error) {
       console.error("Error generating image URL:", error);
       return '/path/to/default/image.jpg';

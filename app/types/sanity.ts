@@ -2,6 +2,7 @@ export interface SanityImage {
     _id: string;
     _type: string;
     asset: {
+        _ref: string;
         _id: string;
         url: string;
     };
