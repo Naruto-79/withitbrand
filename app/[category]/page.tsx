@@ -2,7 +2,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { Metadata } from "next";
 import { sanityClient } from "../lib/sanity";
-import { NextPage } from 'next';
+
+// Add TypeScript interface
+interface CategoryPageProps {
+  params: {
+    category: string
+  }
+}
 
 // Define the product type
 interface SimplifiedProduct {
@@ -34,35 +40,24 @@ async function getData(category: string): Promise<SimplifiedProduct[]> {
 // Dynamic rendering
 export const dynamic = "force-dynamic";
 
-// Generate Metadata
-export async function generateMetadata({ 
-  params 
-}: { 
-  params: { category: string } 
-}): Promise<Metadata> {
+// Optional: Add metadata generation
+export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   return {
-    title: `Products for ${params.category}`,
-    description: `Explore our products in the ${params.category} category.`,
-  };
-}
-
-// Define PageProps to match Next.js expectations
-export interface PageProps {
-  params: Promise<{ category: string }>;
-  searchParams?: Promise<any>;
+    title: `Category: ${params.category}`,
+  }
 }
 
 // Main CategoryPage Component
-const CategoryPage: NextPage<PageProps> = async ({ params }) => {
-  const resolvedParams = await params;
-  const data: SimplifiedProduct[] = await getData(resolvedParams.category);
+export default async function CategoryPage({ params }: CategoryPageProps) {
+  const { category } = params
+  const data: SimplifiedProduct[] = await getData(category);
 
   return (
     <div className="bg-white">
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
         <div className="flex justify-between items-center">
           <h2 className="text-2xl font-bold tracking-tight text-gray-900">
-            Our Products for {resolvedParams.category}
+            Our Products for {category}
           </h2>
         </div>
 
@@ -96,6 +91,4 @@ const CategoryPage: NextPage<PageProps> = async ({ params }) => {
       </div>
     </div>
   );
-};
-
-export default CategoryPage;
+}
